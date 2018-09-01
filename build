@@ -1,0 +1,4 @@
+#!/bin/bash
+
+gcc *.c -L libft -lft checker/arr_list.c checker/check_cmd.c checker/error.c checker/moves.c \
+-I. -I libft/incl
