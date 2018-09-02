@@ -6,102 +6,12 @@
 /*   By: rmdaba <rmdaba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/29 17:19:18 by rmdaba            #+#    #+#             */
-/*   Updated: 2018/08/31 12:16:12 by rmdaba           ###   ########.fr       */
+/*   Updated: 2018/09/02 13:00:31 by rmdaba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-int  list_last(t_list *head)
-{
-	t_list *list;
-
-	list = head;
-	while (list->next != NULL)
-		list = list->next;
-	return(list->data);
-}
-
-int val_dist(t_list *list, int a, int b)
-{
-	int i = 0;
-	t_list *e;
-
-	e = list;
-	while (list != NULL)
-	{
-		printf(GREEN"outer loop\n");
-		if (list->data == a)
-		{
-			printf(RED"if statement\n");
-			i = 0;
-			while (list->data != b)
-			{
-				printf(YELLOW"inner loop\n"DEFAULT);
-				list = list->next;
-				i++;
-			}
-			return (i);
-		}
-		list = list->next;
-	}
-	return (0);
-}
-
-int lowest(t_list *e, int i)
-{
-	int r;
-	t_list *list;
-
-	list = e;
-	r = list->data;
-	while (list != NULL)
-	{
-		if (i == 0)
-			r = (r < list->data) ? r : list->data;
-		else
-			r = (r > list->data) ? r : list->data;
-		list = list->next;
-	}
-	return (r);
-}
-
-int	ft_list_size(t_list *begin_list)
-{
-	int		i;
-	t_list	*list;
-
-	i = 0;
-	list = begin_list;
-	while (list)
-	{
-		list = list->next;
-		i++;
-	}
-	return (i);
-}
-
-int		list_center(t_list *head)
-{
-	int i;
-	int z;
-	t_list *list;
-
-	i = -1;
-	list = head;
-	z = ft_list_size(list);
-	if (z % 2 == 0)
-	{
-		while (++i < (z / 2) - 1)
-			list = list->next;
-	}
-	else
-	{
-		while (++i < z / 2)
-			list = list->next;
-	}
-	return (list->data);
-}
+#include <math.h>
 
 t_push		*init_push(void)
 {
@@ -132,31 +42,7 @@ int		*make_array(char ***arr)
 }
 
 
-int algo(int n)
-{
-	int i = n;
-	if (n == 1)
-		return (n);
-	else if (n <= 100)
-	{
-		while (i > 0)
-		{
-			if ((n / i) > 4)
-				return (i);
-			i -= 1;
-		}
-	}
-	else
-	{
-		while (i > 0)
-		{
-			if ((n / i) > 6)
-				return (i);
-			i -= 1;
-		}
-	}
-	return (1);
-}
+
 
 void start_algo(t_push *e)
 {
@@ -164,27 +50,32 @@ void start_algo(t_push *e)
 	int s = e->fctr;
 	while (i < e->size)
 	{
-		if (ft_list_size(e->a) < 10)
-			break;
-		if (e->a->data < e->sorted[s])
+		if (e->a->data <= e->sorted[s])
 		{
 			pb(&e->a, &e->b);
 			i = 0;
 		}
-		else if (e->a->next->data < e->sorted[s])
+		else if (e->a->next->data <= e->sorted[s])
 		{
 			sa(&e->a);
 			pb(&e->a, &e->b);
 			i = 0;
 		}
-		else if (list_last(e->a) < e->sorted[s])
+		else if (list_last(e->a) <= e->sorted[s])
 		{
 			rra(&e->a);
 			pb(&e->a, &e->b);
 			i = 0;
 		}
-		else
-			ra(&e->a);
+		else if (scnd_last(e->a) <= e->sorted[s])
+		{
+			rra(&e->a);
+			rra(&e->a);
+			pb(&e->a, &e->b);
+			i = 0;
+		}
+		//else
+//			ra(&e->a);
 		if (ft_list_size(e->b) == s)
 		{
 			s = s + e->fctr - 1;
@@ -192,7 +83,8 @@ void start_algo(t_push *e)
 		}
 		i++;
 	}
-	//return(e);
+	while (ft_list_size(e->a))
+		pb(&e->a, &e->b);
 }
 
 void solve(t_push *e)
@@ -201,23 +93,103 @@ void solve(t_push *e)
 	int low;
 	int high;
 	start_algo(e);
-	//printf("\n");
 	int c = (list_center(e->b));
 	int size = ft_list_size(e->b);
-	//while (i < size)
-	//{
-		high = lowest(e->b, 1);
+	
+	while (i < size && e->b != NULL)
+	{
 		low = lowest(e->b, 0);
-		printf(RED"low %d\nc %d\nhigh %d\n"DEFAULT, low, c, high);//val_dist(e->b, low, c));
-		printf(RED"low %d\nc %d\n"DEFAULT, val_dist(e->b, low, c), c);//val_dist(e->b, low, c));
-		//if (val_dist(e->b, low, c) > val_dist(e->b, c, high))
-		//{
+		high = lowest(e->b, 1);
+		//if(e->a->data == low || e->a->data == high)
+			//pb(&e->a, &e->b);
+
+		if (val_dist(e->b, low, c) > val_dist(e->b, c, high) && left_right(e->b, low) == 1)
+		{
+			//printf(YELLOW" %d\n"DEFAULT, left_right(e->b, low));
+			//printf(CYAN"low position %d\n"DEFAULT, position(e->b, low));
+			while(e->b->data != low)
+				rb(&e->b);
+			pa(&e->a, &e->b);
+			ra(&e->a);
+			print_list(e->a, 'A');
+			print_list(e->b, 'B');	
+			//i= 0;
+			//break;
+		}
+		else if (val_dist(e->b, low, c) > val_dist(e->b, c, high) && left_right(e->b, low) == 2)
+		{
+			//printf(YELLOW" %d\n"DEFAULT, left_right(e->b, low));
+			//printf(CYAN"low position %d\n"DEFAULT, position(e->b, low));
 			while(e->b->data != low)
 				rrb(&e->b);
 			pa(&e->a, &e->b);
+			ra(&e->a);
+			print_list(e->a, 'A');
+			print_list(e->b, 'B');
+			//i= 0;
 			//break;
-		//}
-	//}
+		}
+		else if (val_dist(e->b, c, high) > val_dist(e->b, low, c) && left_right(e->b, high) == 1)
+		{
+			//printf(YELLOW" %d\n"DEFAULT, left_right(e->b, high));
+			//printf(CYAN"high position %d\n"DEFAULT, position(e->b, high));
+			while(e->b->data != high)
+				rb(&e->b);
+//			printf(GREEN"data->b %d\n"DEFAULT, e->b->data);
+			pa(&e->a, &e->b);
+			print_list(e->a, 'A');
+			print_list(e->b, 'B');
+		}
+		else if (val_dist(e->b, c, high) > val_dist(e->b, low, c) && left_right(e->b, high) == 2)
+		{
+			//printf(YELLOW" %d\n"DEFAULT, left_right(e->b, high));
+			//printf(CYAN"high position %d\n"DEFAULT, position(e->b, high));
+			while(e->b->data != high)
+				rrb(&e->b);
+			//printf(GREEN"data->b %d\n"DEFAULT, e->b->data);
+			pa(&e->a, &e->b);
+			print_list(e->a, 'A');
+			print_list(e->b, 'B');
+		}
+		else if (e->b->data == low)
+		{
+			pa(&e->a, &e->b);
+			ra(&e->a);
+			print_list(e->a, 'A');
+			print_list(e->b, 'B');
+		}
+		else if (e->b->data == high)
+			pa(&e->a, &e->b);
+		else if (val_dist(e->b, c, high) == val_dist(e->b, low, c))
+		{
+			while(e->b->data != high)
+				rb(&e->b);
+			pa(&e->a, &e->b);
+			print_list(e->a, 'A');
+			print_list(e->b, 'B');
+		}
+		else if (e->a->next->data == low)
+		{
+			sb(&e->b);
+			pa(&e->a, &e->b);
+			i = 0;
+			print_list(e->a, 'A');
+			print_list(e->b, 'B');
+		}
+		i++;
+	}
+	while (e->a->data != lowest(e->a, 0))
+		ra(&e->a);
+}
+
+t_push *create_stuff(t_push *e, char **av)
+{
+	e->array = join_args(av + 1);
+	e->a = make_stack_a(e->a, e->array);
+	e->size = ft_arrsize(e->array);
+	e->fctr = get_factor(e->size);
+	e->sorted = make_array(&e->array);
+	return (e);	
 }
 
 int main(int ac, char **av)
@@ -227,31 +199,12 @@ int main(int ac, char **av)
 	if (ac == 1)
 		return (0);
 	e = init_push();
-	e->array = join_args(av + 1);
-	e->a = make_stack_a(e->a, e->array);
-	e->size = ft_arrsize(e->array);
-	e->fctr = algo(e->size);
-	e->sorted = make_array(&e->array);
-	while (1)
-		;
-	//printf("\n SHIT >>");
-	//for(int i = 0;i < e->size;i++)
-	//	printf("%d ", e->sorted[i]);
+	e = create_stuff(e, av);
+	if (is_sorted(e->a, e->array))
+		return (0);
 	solve(e);
-	//printf(">>>> %d\n",algo(e->size));
-	//printf("distance %d\n", val_dist(e->a, 3, 6));
-	//printf("\nStack A = ");
-	//while (e->a != NULL)
-	//{
-	//	printf("%d ", e->a->data);
-	//	e->a = e->a->next;
-	//}
-	//printf("\n");
-	//printf("Stack B = ");
-	//while (e->b != NULL)
-	//{
-	//	printf("%d ", e->b->data);
-	//	e->b = e->b->next;
-	//}
-	//printf("\n");
+	//printf(YELLOW"%d\n", left_right(e->a, 10));
+	print_list(e->a, 'A');
+	print_list(e->b, 'B');	
+	printf("\n"DEFAULT);
 }

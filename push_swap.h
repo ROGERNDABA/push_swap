@@ -6,7 +6,7 @@
 /*   By: rmdaba <rmdaba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/28 12:22:34 by rmdaba            #+#    #+#             */
-/*   Updated: 2018/08/31 11:18:54 by rmdaba           ###   ########.fr       */
+/*   Updated: 2018/09/02 12:57:19 by rmdaba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,17 @@ void		swap_node(t_list *head);
 void		rotate_nodes(t_list **head);
 void		rrotate_nodes(t_list **head);
 void		push_nodes(t_list **stack1, t_list **stack2);
+
+int			ft_list_size(t_list *begin_list);
+int			list_last(t_list *head);
+int			val_dist(t_list *e, int a, int b);
+int			lowest(t_list *e, int i);
+int			position(t_list *list, int val);
+int			left_right(t_list *e, int val);
+int			scnd_last(t_list *list);
+int			list_center(t_list *head);
+int			get_factor(int n);
+void		print_list(t_list *list, char i);
 
 typedef struct	s_push
 {

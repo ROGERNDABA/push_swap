@@ -6,7 +6,7 @@
 /*   By: rmdaba <rmdaba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/28 17:27:17 by rmdaba            #+#    #+#             */
-/*   Updated: 2018/08/31 14:58:25 by rmdaba           ###   ########.fr       */
+/*   Updated: 2018/09/02 12:06:57 by rmdaba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,9 @@ void	check_cmd(t_list **stack_a, t_list **stack_b, char *s)
 		push_nodes(stack_b, stack_a);
 	else if (!ft_strcmp(s, "pa") && *stack_b)
 		push_nodes(stack_a, stack_b);
+	else
+	{
+		printf("Error\n");
+		exit (1);
+	}
 }
